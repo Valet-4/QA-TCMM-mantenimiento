@@ -1,0 +1,18 @@
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Configuración del editor
+.vscode/
+.idea/
+
+# Dependencias y registros (por si el proyecto crece con Node o Playwright)
+node_modules/
+*.log
+
+# Variables de entorno y archivos locales que no deben publicarse
+.env
+*.local.*
+notas-privadas.txt
+borradores/
