@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>QA-TCMM · Gestión de casos de prueba</title>
+<style>
+:root{--bg:#F8FAFC;--sf:#fff;--ink:#0F172A;--mut:#64748B;--ln:#E2E8F0;--pri:#1E3A8A;--side:#1E3A8A;--zb:#F1F5F9;--ok:#10B981;--bad:#EF4444;--okt:#047857;--okb:#D1FAE5;--badt:#B91C1C;--badb:#FEE2E2;--wt:#B45309;--wb:#FEF3C7;--it:#1E40AF;--ib:#DBEAFE;--nt:#475569;--nb:#E2E8F0;--inp:#fff;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0B1220;--sf:#131C2E;--ink:#E5E9F2;--mut:#94A3B8;--ln:#26324A;--pri:#3B6FE0;--side:#0A1020;--zb:#17223A;--okt:#6EE7B7;--okb:#0F3B2E;--badt:#FCA5A5;--badb:#4A1D1D;--wt:#FCD34D;--wb:#43330F;--it:#93C5FD;--ib:#1B2E55;--nt:#CBD5E1;--nb:#26324A;--inp:#0B1220;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0B1220;--sf:#131C2E;--ink:#E5E9F2;--mut:#94A3B8;--ln:#26324A;--pri:#3B6FE0;--side:#0A1020;--zb:#17223A;--okt:#6EE7B7;--okb:#0F3B2E;--badt:#FCA5A5;--badb:#4A1D1D;--wt:#FCD34D;--wb:#43330F;--it:#93C5FD;--ib:#1B2E55;--nt:#CBD5E1;--nb:#26324A;--inp:#0B1220;color-scheme:dark}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}html,body{height:100%}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,"Segoe UI",Helvetica,Arial,sans-serif}
+.app{display:grid;grid-template-columns:240px 1fr;min-height:100%}
+aside{background:var(--side);color:#fff;padding:20px 14px;display:flex;flex-direction:column;gap:4px}
+.brand{font-weight:700;font-size:20px;padding:0 10px 2px}
+aside small{color:#BFD0F5;padding:0 10px 14px;display:block;line-height:1.3}
+.nav{all:unset;cursor:pointer;padding:9px 12px;border-radius:8px;color:#DCE6FF;border-left:3px solid transparent;display:flex;justify-content:space-between}
+.nav:hover{background:rgba(255,255,255,.1)}
+.nav.on{background:rgba(255,255,255,.18);color:#fff;border-left-color:#93C5FD}
+.bdg{background:var(--bad);color:#fff;border-radius:10px;font-size:12px;padding:0 7px;font-weight:700}
+.bdg:empty{display:none}
+:is(.nav,button,input,select,textarea,summary):focus-visible{outline:2px solid #60A5FA;outline-offset:2px}
+.who{margin-top:auto;padding:12px 10px 0;border-top:1px solid rgba(255,255,255,.2);font-size:13px;color:#DCE6FF}
+.who b{display:block;color:#fff;font-size:14px}
+main{padding:22px 26px;min-width:0}
+h1{font-size:22px;margin:0 0 2px;color:var(--pri)}
+.sub{color:var(--mut);margin:0 0 16px}
+.kpis{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.kpi{background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:8px 14px;min-width:125px}
+.kpi b{font-size:22px;display:block}.kpi span{color:var(--mut);font-size:13px}
+.k-ok b{color:var(--okt)}.k-bad b{color:var(--badt)}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:16px;margin-bottom:16px}
+.card h2{font-size:16px;margin:0 0 10px}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--ln);vertical-align:top}
+th{color:var(--mut);font-weight:600;font-size:13px}
+tr:nth-child(even) td{background:var(--zb)}
+tr.fail td:first-child{box-shadow:inset 4px 0 var(--bad)}
+small{color:var(--mut)}
+.f{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.f label{display:flex;flex-direction:column;gap:3px;font-size:13px;color:var(--mut)}
+.w{grid-column:1/-1}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--inp);border:1px solid var(--ln);border-radius:8px;padding:7px 9px;width:100%}
+textarea{min-height:84px;resize:vertical}
+.b{font:inherit;cursor:pointer;border:1px solid var(--ln);background:var(--sf);color:var(--ink);border-radius:8px;padding:7px 13px}
+.b:hover{border-color:var(--mut)}
+.p{background:var(--pri);border-color:var(--pri);color:#fff;font-weight:600}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.tag{display:inline-block;padding:1px 10px;border-radius:10px;font-size:12px;font-weight:600;white-space:nowrap}
+.t-ok{background:var(--okb);color:var(--okt)}.t-bad{background:var(--badb);color:var(--badt)}.t-warn{background:var(--wb);color:var(--wt)}.t-info{background:var(--ib);color:var(--it)}.t-n{background:var(--nb);color:var(--nt)}
+.bar{height:8px;background:var(--nb);border-radius:4px;width:110px;display:inline-block;margin-right:6px;vertical-align:middle;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ok)}
+.stack{display:flex;height:16px;border-radius:8px;overflow:hidden;background:var(--nb);margin:8px 0}
+.stack i{display:block}.s-ok{background:var(--ok)}.s-bad{background:var(--bad)}.s-n{background:#94A3B8}
+.step{display:grid;grid-template-columns:1fr 150px;gap:8px 10px;padding:10px 0;border-bottom:1px solid var(--ln)}
+details summary{cursor:pointer;color:var(--pri);font-weight:600}
+pre{background:var(--zb);padding:10px;border-radius:8px;overflow-x:auto;font-size:12.5px;margin:0}
+img.ev{max-width:100%;border:1px solid var(--ln);border-radius:8px;margin-top:6px}
+#toast{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));background:#0F172A;color:#fff;padding:10px 16px;border-radius:8px;border-left:4px solid #60A5FA;display:none;max-width:340px;z-index:30}
+.ro{background:var(--ib);color:var(--it);padding:9px 12px;border-radius:8px;margin-bottom:14px;font-size:14px}
+dialog{border:1px solid var(--ln);border-radius:12px;background:var(--sf);color:var(--ink);max-width:640px;width:92%;padding:18px}
+dialog::backdrop{background:rgba(15,23,42,.55)}
+#login{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:20;padding:16px}
+#login .card{width:100%;max-width:400px;margin:0}
+.nt{padding:10px 0;border-bottom:1px solid var(--ln)}.nt.n{font-weight:600}
+@media (max-width:760px){.app{grid-template-columns:1fr}aside{flex-direction:row;flex-wrap:wrap;align-items:center}aside small{display:none}.who{margin:0;border:0;padding:0;width:100%}main{padding:16px}.step{grid-template-columns:1fr}}
+@media print{aside,#toast,.noprint{display:none!important}.app{display:block}}
+</style>
+</head>
+<body>
+<div id="login"><div class="card"><h1>QA-TCMM</h1><p class="sub">Gestión y documentación de casos de prueba. Inicia sesión para continuar.</p>
+ <div class="f"><label class="w">Correo<input id="le" type="email" autocomplete="username"></label><label class="w">Clave<input id="lp" type="password" autocomplete="current-password"></label></div>
+ <p id="lerr" style="color:var(--badt);margin:8px 0 0"></p>
+ <div class="row"><button class="b p" id="lgo">Iniciar sesión</button></div>
+ <p class="sub" style="margin-top:14px">Cuentas de ejemplo:</p>
+ <div class="row" style="margin-top:0"><button class="b" id="fq1">Analista QA</button><button class="b" id="fq2">Desarrollador</button></div></div></div>
+<div class="app">
+<aside>
+ <div class="brand">QA-TCMM</div><small>Gestión y documentación de casos de prueba</small>
+ <button class="nav" data-t="panel">Panel</button>
+ <button class="nav" data-t="proy">Proyectos y usuarios</button>
+ <button class="nav" data-t="casos">Casos de prueba</button>
+ <button class="nav" data-t="ejec">Ejecución y evidencias</button>
+ <button class="nav" data-t="defe">Defectos</button>
+ <button class="nav" data-t="repo">Reportes</button>
+ <button class="nav" data-t="notif">Notificaciones <span class="bdg" id="nb"></span></button>
+ <div class="who"><span id="wn"></span><button class="b" style="margin-top:10px;width:100%" onclick="logout()">Cerrar sesión</button>
+  <button class="b" style="margin-top:6px;width:100%" onclick="reset()">Restablecer datos</button></div>
+</aside>
+<main><div id="kpis" class="kpis"></div><div id="view"></div></main>
+</div>
+<dialog id="dlg"></dialog>
+<div id="toast" role="status"></div>
+<script>
+const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const $=s=>document.querySelector(s);
+const now=()=>{const d=new Date();return d.toISOString().slice(0,10)+' '+d.toTimeString().slice(0,5)};
+const seed=()=>({me:null,
+ users:[{id:'USR-001',nombre:'Lizeth Cuta',rol:'qa',email:'lizeth@qatcmm.co',pass:'qa2026'},{id:'USR-002',nombre:'Juan Gil',rol:'dev',email:'juan@qatcmm.co',pass:'dev2026'}],
+ projects:[{id:'PRJ-2026',nombre:'Módulo Mantenimiento Salud',desc:'Sistema de auditoría de facturación'}],
+ cases:[
+  {id:'TC-101',pid:'PRJ-2026',titulo:'Verificar cálculo de copago de usuario',req:'RF-04',pre:'Usuario activo en base de datos',pri:'Alta',est:'Fallido',ver:2,
+   steps:[{a:'Enviar trama XML con servicio liquidado',r:'Respuesta HTTP 200 con valor calculado'},{a:'Consultar el copago en pantalla',r:'El valor coincide con la tarifa vigente'}],
+   hist:[{v:1,f:'2026-09-02',n:'Creación del caso'},{v:2,f:'2026-09-05',n:'Se agregó el paso de consulta en pantalla'}]},
+  {id:'TC-102',pid:'PRJ-2026',titulo:'Rechazar inicio de sesión con clave inválida',req:'RF-01',pre:'Usuario registrado',pri:'Media',est:'Aprobado',ver:1,
+   steps:[{a:'Ingresar correo válido y clave incorrecta',r:'El sistema muestra el mensaje de error'}],hist:[{v:1,f:'2026-09-02',n:'Creación del caso'}]},
+  {id:'TC-103',pid:'PRJ-2026',titulo:'Exportar reporte de auditoría a CSV',req:'RF-09',pre:'Existen ejecuciones registradas',pri:'Baja',est:'Diseñado',ver:1,
+   steps:[{a:'Abrir Reportes y descargar el CSV',r:'El archivo contiene una fila por ejecución'}],hist:[{v:1,f:'2026-09-06',n:'Creación del caso'}]}],
+ execs:[{id:'EJ-888',cid:'TC-102',fecha:'2026-09-04 10:10',res:'APROBADA',obs:'Sin novedades',ev:'',img:'',by:'USR-001',rs:[{ok:true,n:'Mensaje de error mostrado'}]},
+  {id:'EJ-889',cid:'TC-101',fecha:'2026-09-05 16:30',res:'FALLIDA',obs:'Time-out en el servicio web de liquidación',ev:'log_timeout.txt',img:'',by:'USR-001',rs:[{ok:true,n:'HTTP 200 recibido'},{ok:false,n:'Time-out en el servicio web'}]}],
+ defects:[{id:'DEF-501',eid:'EJ-889',cid:'TC-101',resumen:'Excepción NullPointer en cálculo de cuota',sev:'Crítica',est:'Asignado',dev:'USR-002',rec:false}],
+ notifs:[{id:1,to:'USR-002',txt:'Se te asignó DEF-501: Excepción NullPointer en cálculo de cuota',f:'2026-09-05 16:31',l:false}],
+ seq:{tc:103,ex:889,df:501,nt:1}});
+const load=()=>{try{return JSON.parse(localStorage.getItem('qatcmm2'))||seed()}catch(e){return seed()}};
+let S=load(),tab='panel',pid=S.projects[0].id,edit=null,runCid=null,fq='',fe='';
+const save=()=>{try{localStorage.setItem('qatcmm2',JSON.stringify(S))}catch(e){toast('No hay espacio de almacenamiento; la evidencia pesada no se guardó.')}};
+const toast=m=>{const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.display='none',3800)};
+const me=()=>S.users.find(u=>u.id===S.me),role=()=>me()?me().rol:'';
+const CL={Aprobado:'ok',APROBADA:'ok',Resuelto:'ok',Cerrado:'n',Fallido:'bad',FALLIDA:'bad','Crítica':'bad',Reincidente:'bad','Diseñado':'n',Asignado:'warn','En corrección':'warn',Alta:'warn',Media:'info',Baja:'n'};
+const tag=e=>`<span class="tag t-${CL[e]||'n'}">${esc(e)}</span>`;
+const cname=id=>{const c=S.cases.find(x=>x.id===id);return c?c.titulo:id};
+const uname=id=>(S.users.find(u=>u.id===id)||{}).nombre||'—';
+const pcases=()=>S.cases.filter(c=>c.pid===pid);
+const openDef=()=>S.defects.filter(d=>d.est!=='Cerrado'&&pcases().some(c=>c.id===d.cid));
+const notify=(to,txt)=>{if(to)S.notifs.push({id:++S.seq.nt,to,txt,f:now(),l:false})};
+const ro=()=>role()==='dev'?'<div class="ro">Tu perfil de Desarrollador permite consultar los casos y actualizar el estado de los defectos que te asignan.</div>':'';
+const projSel=()=>`<label>Proyecto<select onchange="pid=this.value;edit=null;runCid=null;go()">${S.projects.map(p=>`<option value="${p.id}" ${p.id===pid?'selected':''}>${esc(p.nombre)}</option>`).join('')}</select></label>`;
+const modal=h=>{const d=$('#dlg');d.innerHTML=h+'<div class="row"><button class="b" onclick="dlg.close()">Cerrar</button></div>';d.showModal()};
+
+function kpis(){const cs=pcases(),ap=cs.filter(c=>c.est==='Aprobado').length,fa=cs.filter(c=>c.est==='Fallido').length;
+ $('#kpis').innerHTML=[[cs.length,'Casos de prueba',''],[ap,'Aprobados','k-ok'],[fa,'Fallidos','k-bad'],[openDef().length,'Defectos abiertos',''],[(cs.length?Math.round(ap/cs.length*100):0)+'%','Cobertura aprobada','']].map(k=>`<div class="kpi ${k[2]}"><b>${k[0]}</b><span>${k[1]}</span></div>`).join('')}
+
+const V={
+panel(){
+ const cs=pcases(),n=e=>cs.filter(c=>c.est===e).length,t=cs.length||1,od=openDef();
+ const mine=role()==='dev'?od.filter(d=>d.dev===S.me).map(d=>`<tr><td>${d.id}</td><td>${esc(d.resumen)}</td><td>${tag(d.sev)}</td></tr>`):cs.filter(c=>c.est!=='Aprobado').map(c=>`<tr class="${c.est==='Fallido'?'fail':''}"><td>${c.id}</td><td>${esc(c.titulo)}</td><td>${tag(c.est)}</td></tr>`);
+ const last=S.execs.filter(e=>cs.some(c=>c.id===e.cid)).slice(-5).reverse().map(e=>`<tr><td>${e.id}</td><td>${esc(cname(e.cid))}</td><td>${tag(e.res)}</td></tr>`).join('');
+ return `<h1>Panel de calidad</h1><p class="sub">Estado actual del proyecto de un vistazo.</p><div class="f" style="margin-bottom:14px">${projSel()}</div>
+ <div class="g2"><div class="card"><h2>Estado de los casos</h2><div class="stack">${[['Aprobado','ok'],['Fallido','bad'],['Diseñado','n']].map(([e,k])=>`<i class="s-${k}" style="width:${n(e)/t*100}%"></i>`).join('')}</div>
+ <p>${tag('Aprobado')} ${n('Aprobado')} &nbsp; ${tag('Fallido')} ${n('Fallido')} &nbsp; ${tag('Diseñado')} ${n('Diseñado')}</p>
+ <h2 style="margin-top:14px">Defectos abiertos por severidad</h2><p>${['Crítica','Alta','Media','Baja'].map(s=>`${tag(s)} ${od.filter(d=>d.sev===s).length}`).join(' &nbsp; ')}</p></div>
+ <div class="card"><h2>${role()==='dev'?'Defectos asignados a ti':'Casos pendientes de aprobar'}</h2><div class="tw"><table>${mine.join('')||'<tr><td>Todo al día. No tienes pendientes.</td></tr>'}</table></div></div></div>
+ <div class="card"><h2>Últimas ejecuciones</h2><div class="tw"><table><tr><th>Código</th><th>Caso</th><th>Resultado</th></tr>${last||'<tr><td colspan="3">Aún no hay ejecuciones.</td></tr>'}</table></div></div>`},
+proy(){
+ const rows=S.projects.map(p=>{const cs=S.cases.filter(c=>c.pid===p.id),ap=cs.filter(c=>c.est==='Aprobado').length,cv=cs.length?Math.round(ap/cs.length*100):0;
+  return `<tr><td>${p.id}</td><td><b>${esc(p.nombre)}</b><br><small>${esc(p.desc)}</small></td><td>${cs.length}</td><td><span class="bar"><i style="width:${cv}%"></i></span>${cv}%</td></tr>`}).join('');
+ const us=S.users.map(u=>`<tr><td>${u.id}</td><td>${esc(u.nombre)}</td><td>${esc(u.email)}</td><td>${tag(u.rol==='qa'?'Analista QA':'Desarrollador')}</td></tr>`).join('');
+ const q=role()==='qa';
+ return `<h1>Proyectos y usuarios</h1><p class="sub">Espacios de trabajo y equipo que participa en las pruebas.</p>${ro()}
+ <div class="card"><h2>Proyectos</h2><div class="tw"><table><tr><th>Código</th><th>Proyecto</th><th>Casos</th><th>Cobertura</th></tr>${rows}</table></div>
+ ${q?`<div class="f" style="margin-top:14px"><label>Nombre del proyecto<input id="pn"></label><label>Descripción<input id="pd"></label></div><div class="row"><button class="b p" onclick="addProj()">Crear proyecto</button></div>`:''}</div>
+ <div class="card"><h2>Usuarios y roles</h2><div class="tw"><table><tr><th>Código</th><th>Nombre</th><th>Correo</th><th>Rol</th></tr>${us}</table></div>
+ ${q?`<div class="f" style="margin-top:14px"><label>Nombre<input id="un"></label><label>Correo<input id="ue" type="email"></label><label>Clave inicial<input id="up"></label><label>Rol<select id="ur"><option value="qa">Analista QA</option><option value="dev">Desarrollador</option></select></label></div><div class="row"><button class="b p" onclick="addUser()">Agregar usuario</button></div>`:''}</div>`},
+casos(){
+ const c=edit?S.cases.find(x=>x.id===edit):null;
+ return `<h1>Casos de prueba</h1><p class="sub">Cada caso se vincula a un requisito y conserva su historial de versiones.</p>${ro()}
+ <div class="card"><div class="f">${projSel()}<label>Buscar por código, título o requisito<input id="fq" value="${esc(fq)}" oninput="fq=this.value;drawCases()"></label>
+ <label>Estado<select onchange="fe=this.value;drawCases()">${['','Diseñado','Aprobado','Fallido'].map(x=>`<option value="${x}" ${x===fe?'selected':''}>${x||'Todos'}</option>`).join('')}</select></label></div><div class="tw" id="tbl" style="margin-top:10px"></div></div>
+ ${role()==='qa'?`<div class="card"><h2>${c?'Editar '+c.id+' (se guardará como v'+(c.ver+1)+')':'Nuevo caso de prueba'}</h2>
+ <div class="f"><label class="w">Título<input id="ct" value="${c?esc(c.titulo):''}"></label><label>Requisito asociado<input id="cr" placeholder="RF-01" value="${c?esc(c.req):''}"></label>
+ <label>Prioridad<select id="cp">${['Alta','Media','Baja'].map(x=>`<option ${c&&c.pri===x?'selected':''}>${x}</option>`).join('')}</select></label>
+ <label class="w">Precondiciones<input id="cc" value="${c?esc(c.pre):''}"></label>
+ <label class="w">Pasos (uno por línea: acción | resultado esperado)<textarea id="cs">${c?c.steps.map(s=>s.a+' | '+s.r).join('\n'):''}</textarea></label></div>
+ <div class="row"><button class="b p" onclick="saveCase()">${c?'Guardar nueva versión':'Crear caso'}</button>${c?'<button class="b" onclick="edit=null;go()">Cancelar</button>':''}</div></div>`:''}`},
+ejec(){
+ const list=pcases();if(!runCid||!list.some(c=>c.id===runCid))runCid=list.length?list[0].id:null;
+ const c=list.find(x=>x.id===runCid);
+ const steps=c?c.steps.map((s,i)=>`<div class="step"><div><b>Paso ${i+1}.</b> ${esc(s.a)}<br><small>Esperado: ${esc(s.r)}</small></div><select id="st${i}" aria-label="Resultado del paso ${i+1}"><option value="ok">Cumple</option><option value="no">No cumple</option></select><input class="w" id="so${i}" placeholder="Resultado obtenido"></div>`).join(''):'';
+ return `<h1>Ejecución y evidencias</h1><p class="sub">Ejecuta los pasos, adjunta la evidencia y registra el resultado.</p>${ro()}
+ <div class="card"><div class="f">${projSel()}<label>Caso a ejecutar<select onchange="runCid=this.value;go()">${list.map(x=>`<option value="${x.id}" ${x.id===runCid?'selected':''}>${x.id} · ${esc(x.titulo)}</option>`).join('')}</select></label></div></div>
+ ${c&&role()==='qa'?`<div class="card"><h2>${c.id} · versión ${c.ver}</h2><small>Precondiciones: ${esc(c.pre)}</small>${steps}
+ <div class="f" style="margin-top:12px"><label>Severidad si hay falla<select id="sv"><option>Crítica</option><option>Alta</option><option selected>Media</option><option>Baja</option></select></label><label>Evidencia (imagen de la falla)<input type="file" id="ev" accept="image/*"></label><label class="w">Observaciones (obligatorio si algún paso falla)<input id="ob" placeholder="Describe qué ocurrió"></label></div>
+ <div class="row"><button class="b p" onclick="finish()">Finalizar ejecución</button></div></div>`:''}
+ <div class="card"><h2>Ejecuciones registradas</h2><div class="tw"><table><tr><th>Código</th><th>Caso</th><th>Fecha</th><th>Resultado</th><th>Evidencia</th><th></th></tr>${S.execs.filter(e=>list.some(x=>x.id===e.cid)).slice().reverse().map(e=>`<tr class="${e.res==='FALLIDA'?'fail':''}"><td>${e.id}</td><td>${esc(cname(e.cid))}</td><td>${e.fecha}</td><td>${tag(e.res)}</td><td>${e.img?'Imagen adjunta':esc(e.ev||'—')}</td><td><button class="b" onclick="viewExec('${e.id}')">Ver detalle</button></td></tr>`).join('')}</table></div></div>`},
+defe(){
+ const rows=S.defects.map(d=>`<tr class="${d.est!=='Cerrado'&&d.sev==='Crítica'?'fail':''}"><td>${d.id}</td><td><b>${esc(d.resumen)}</b> ${d.rec?tag('Reincidente'):''}<br><small>${d.cid} · ${esc(cname(d.cid))} · origen ${d.eid}</small></td><td>${tag(d.sev)}</td><td>${tag(d.est)}</td><td>${esc(uname(d.dev))}</td>
+ <td><button class="b" onclick="viewExec('${d.eid}')">Ver detalle</button> ${role()==='dev'&&d.est!=='Cerrado'?`<select aria-label="Cambiar estado de ${d.id}" onchange="setDef('${d.id}',this.value)">${['Asignado','En corrección','Resuelto'].map(x=>`<option ${x===d.est?'selected':''}>${x}</option>`).join('')}</select>`:''}${role()==='qa'&&d.est==='Resuelto'?`<button class="b p" onclick="closeDef('${d.id}')">Cerrar y reprobar</button>`:''}</td></tr>`).join('')||'<tr><td colspan="6">No hay defectos. Se crean automáticamente cuando una ejecución falla.</td></tr>';
+ return `<h1>Gestión de defectos</h1><p class="sub">Cada defecto queda amarrado a la ejecución y al caso que lo originó.</p>
+ <div class="card"><div class="tw"><table><tr><th>Código</th><th>Hallazgo</th><th>Severidad</th><th>Estado</th><th>Asignado a</th><th>Acción</th></tr>${rows}</table></div></div>`},
+repo(){
+ const cs=pcases(),ex=S.execs.filter(e=>cs.some(c=>c.id===e.cid));
+ const csv=['Ejecucion,Caso,Titulo,Fecha,Resultado,Analista,Defecto'].concat(ex.map(e=>{const d=S.defects.find(x=>x.eid===e.id);return [e.id,e.cid,'"'+cname(e.cid).replace(/"/g,'""')+'"',e.fecha,e.res,uname(e.by),d?d.id:''].join(',')})).join('\n');
+ window.CSV=csv;
+ const reqs=[...new Set(cs.map(c=>c.req))].sort().map(r=>{const g=cs.filter(c=>c.req===r),est=g.some(c=>c.est==='Fallido')?'Fallido':g.every(c=>c.est==='Aprobado')?'Aprobado':'Diseñado';
+  return `<tr class="${est==='Fallido'?'fail':''}"><td><b>${esc(r)}</b></td><td>${g.map(c=>c.id).join(', ')}</td><td>${tag(est)}</td><td>${S.defects.filter(d=>d.est!=='Cerrado'&&g.some(c=>c.id===d.cid)).length}</td></tr>`}).join('');
+ return `<h1>Reportes</h1><p class="sub">Trazabilidad, resultados y exportación de datos.</p>
+ <div class="card"><div class="f">${projSel()}</div>
+ <h2 style="margin-top:14px">Matriz de trazabilidad requisito, casos y defectos</h2><div class="tw"><table><tr><th>Requisito</th><th>Casos</th><th>Estado</th><th>Defectos abiertos</th></tr>${reqs||'<tr><td colspan="4">Sin casos.</td></tr>'}</table></div>
+ <h2 style="margin-top:14px">Ejecuciones</h2><div class="tw"><table><tr><th>Ejecución</th><th>Caso</th><th>Fecha</th><th>Resultado</th><th>Defecto</th></tr>${ex.map(e=>{const d=S.defects.find(x=>x.eid===e.id);return `<tr><td>${e.id}</td><td>${esc(cname(e.cid))}</td><td>${e.fecha}</td><td>${tag(e.res)}</td><td>${d?d.id:'—'}</td></tr>`}).join('')||'<tr><td colspan="5">Sin ejecuciones en este proyecto.</td></tr>'}</table></div>
+ <div class="row noprint"><button class="b p" onclick="dl()">Descargar CSV</button><button class="b" onclick="window.print()">Imprimir o guardar como PDF</button></div></div>
+ <div class="card noprint"><h2>Vista previa del CSV</h2><pre>${esc(csv)}</pre></div>`},
+notif(){
+ const ns=S.notifs.filter(n=>n.to===S.me).slice().reverse();
+ return `<h1>Notificaciones</h1><p class="sub">Avisos de asignación y cambios de estado de los defectos.</p><div class="card">${ns.map(n=>`<div class="nt ${n.l?'':'n'}">${esc(n.txt)}<br><small>${n.f}</small></div>`).join('')||'<p>No tienes notificaciones.</p>'}
+ ${ns.some(n=>!n.l)?'<div class="row"><button class="b" onclick="readAll()">Marcar todas como leídas</button></div>':''}</div>`}};
+
+function drawCases(){const q=fq.toLowerCase(),r=pcases().filter(c=>(!fe||c.est===fe)&&(c.id+' '+c.titulo+' '+c.req).toLowerCase().includes(q)).map(c=>`<tr class="${c.est==='Fallido'?'fail':''}"><td>${c.id}</td><td><b>${esc(c.titulo)}</b><br><small>Requisito ${esc(c.req)} · ${c.steps.length} paso(s)</small></td><td>${tag(c.pri)}</td><td>${tag(c.est)}</td>
+ <td><details><summary>v${c.ver}</summary><small>${c.hist.map(h=>`v${h.v} · ${h.f} · ${esc(h.n)}`).join('<br>')}</small></details></td>
+ <td>${role()==='qa'?`<button class="b" onclick="edit='${c.id}';go()">Editar</button> <button class="b" onclick="dupCase('${c.id}')">Duplicar</button>`:''}</td></tr>`).join('');
+ $('#tbl').innerHTML=`<table><tr><th>Código</th><th>Caso</th><th>Prioridad</th><th>Estado</th><th>Versión</th><th></th></tr>${r||'<tr><td colspan="6">Ningún caso coincide con la búsqueda. Cambia los filtros o crea uno nuevo.</td></tr>'}</table>`}
+const A={casos:drawCases};
+function go(){document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));kpis();
+ const u=S.notifs.filter(n=>n.to===S.me&&!n.l).length;$('#nb').textContent=u||'';
+ $('#view').innerHTML=V[tab]();if(A[tab])A[tab]()}
+function boot(){$('#login').style.display=S.me?'none':'flex';if(S.me){$('#wn').innerHTML=`<b>${esc(me().nombre)}</b>${role()==='qa'?'Analista QA':'Desarrollador'}`;go()}}
+function login(){const u=S.users.find(x=>x.email===$('#le').value.trim().toLowerCase()&&x.pass===$('#lp').value);
+ if(!u){$('#lerr').textContent='Correo o clave incorrectos. Usa una de las cuentas de ejemplo.';return}
+ $('#lerr').textContent='';S.me=u.id;tab=u.rol==='dev'?'defe':'panel';save();boot()}
+function logout(){S.me=null;save();boot()}
+function addProj(){const n=$('#pn').value.trim();if(!n)return toast('Escribe el nombre del proyecto.');S.projects.push({id:'PRJ-'+(2026+S.projects.length),nombre:n,desc:$('#pd').value.trim()});save();toast('Proyecto creado.');go()}
+function addUser(){const n=$('#un').value.trim(),e=$('#ue').value.trim().toLowerCase(),p=$('#up').value;if(!n||!e||!p)return toast('Completa nombre, correo y clave inicial.');
+ if(S.users.some(u=>u.email===e))return toast('Ya existe un usuario con ese correo.');S.users.push({id:'USR-00'+(S.users.length+1),nombre:n,rol:$('#ur').value,email:e,pass:p});save();toast('Usuario agregado.');go()}
+function saveCase(){
+ const t=$('#ct').value.trim(),r=$('#cr').value.trim(),st=$('#cs').value.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{const p=l.split('|');return{a:p[0].trim(),r:(p[1]||'').trim()}});
+ if(!t||!r)return toast('Completa el título y el requisito asociado.');
+ if(!st.length||st.some(s=>!s.r))return toast('Cada paso necesita acción y resultado esperado, separados por |.');
+ const f=now().slice(0,10);
+ if(edit){const c=S.cases.find(x=>x.id===edit);Object.assign(c,{titulo:t,req:r,pre:$('#cc').value,pri:$('#cp').value,steps:st,est:'Diseñado'});c.ver++;c.hist.push({v:c.ver,f,n:'Modificación del caso'});toast(c.id+' guardado como versión '+c.ver+'.');edit=null}
+ else{S.cases.push({id:'TC-'+(++S.seq.tc),pid,titulo:t,req:r,pre:$('#cc').value,pri:$('#cp').value,est:'Diseñado',ver:1,steps:st,hist:[{v:1,f,n:'Creación del caso'}]});toast('Caso creado correctamente.')}
+ save();go()}
+function dupCase(id){const c=JSON.parse(JSON.stringify(S.cases.find(x=>x.id===id))),f=now().slice(0,10);Object.assign(c,{id:'TC-'+(++S.seq.tc),titulo:c.titulo+' (copia)',est:'Diseñado',ver:1,hist:[{v:1,f,n:'Duplicado de '+id}]});S.cases.push(c);save();toast('Caso duplicado como '+c.id+'.');go()}
+const readEv=f=>new Promise(r=>{if(!f||!/^image\//.test(f.type))return r('');const fr=new FileReader();fr.onerror=()=>r('');
+ fr.onload=()=>{const im=new Image();im.onerror=()=>r('');im.onload=()=>{const k=Math.min(1,720/im.width),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);r(c.toDataURL('image/jpeg',.72))};im.src=fr.result};fr.readAsDataURL(f)});
+async function finish(){
+ const c=S.cases.find(x=>x.id===runCid),rs=c.steps.map((s,i)=>({ok:$('#st'+i).value==='ok',n:$('#so'+i).value.trim()})),bad=rs.map((r,i)=>r.ok?-1:i).filter(i=>i>=0),ob=$('#ob').value.trim();
+ if(bad.length&&!ob)return toast('Describe el fallo en Observaciones antes de finalizar.');
+ const f=$('#ev').files[0],img=await readEv(f),e={id:'EJ-'+(++S.seq.ex),cid:c.id,fecha:now(),res:bad.length?'FALLIDA':'APROBADA',obs:ob,ev:f?f.name:'',img,by:S.me,rs};
+ S.execs.push(e);c.est=bad.length?'Fallido':'Aprobado';
+ if(bad.length){const dev=S.users.find(u=>u.rol==='dev'),rec=S.defects.some(x=>x.cid===c.id&&x.est==='Cerrado'),
+  d={id:'DEF-'+(++S.seq.df),eid:e.id,cid:c.id,resumen:'Falla en el paso '+(bad[0]+1)+': '+c.steps[bad[0]].a,sev:$('#sv').value,est:'Asignado',dev:dev?dev.id:'',rec};
+  S.defects.push(d);notify(d.dev,'Se te asignó '+d.id+(rec?' (reincidente)':'')+': '+d.resumen);
+  toast(rec?'Falla reincidente: este caso ya tenía un defecto cerrado. Se creó '+d.id+'.':'Ejecución fallida. Se creó '+d.id+' y se notificó al desarrollador.')}
+ else toast('Ejecución aprobada. Estado del caso actualizado.');
+ save();go()}
+function viewExec(id){const e=S.execs.find(x=>x.id===id),c=S.cases.find(x=>x.id===e.cid);
+ modal(`<h2>${e.id} · ${esc(c.titulo)}</h2><p>${tag(e.res)} <small>${e.fecha} · ${esc(uname(e.by))}</small></p><div class="tw"><table><tr><th>Paso</th><th>Esperado</th><th>Resultado</th></tr>${c.steps.map((s,i)=>{const r=(e.rs||[])[i]||{};return `<tr><td>${i+1}. ${esc(s.a)}</td><td>${esc(s.r)}</td><td>${tag(r.ok?'Aprobado':'Fallido')}<br><small>${esc(r.n||'')}</small></td></tr>`}).join('')}</table></div>
+ <p><b>Observaciones:</b> ${esc(e.obs||'—')}</p>${e.img?`<img class="ev" alt="Evidencia de la ejecución ${e.id}" src="${e.img}">`:`<p><small>Evidencia: ${esc(e.ev||'sin archivo adjunto')}</small></p>`}`)}
+function setDef(id,v){const d=S.defects.find(x=>x.id===id),e=S.execs.find(x=>x.id===d.eid);d.est=v;if(v==='Resuelto')notify(e.by,d.id+' fue resuelto por '+uname(S.me)+'. Ya puedes volver a probar '+d.cid+'.');save();toast('Estado actualizado a '+v+'.');go()}
+function closeDef(id){const d=S.defects.find(x=>x.id===id);d.est='Cerrado';S.cases.find(c=>c.id===d.cid).est='Diseñado';notify(d.dev,d.id+' fue cerrado por QA.');save();toast('Defecto cerrado. El caso quedó listo para una nueva ejecución.');go()}
+function readAll(){S.notifs.forEach(n=>{if(n.to===S.me)n.l=true});save();go()}
+function dl(){const b=new Blob(['\ufeff'+window.CSV],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='reporte-ejecuciones-'+pid+'.csv';document.body.appendChild(a);a.click();a.remove();toast('Reporte CSV descargado.')}
+function reset(){S=seed();pid=S.projects[0].id;edit=null;runCid=null;save();toast('Datos de ejemplo restablecidos. Inicia sesión de nuevo.');boot()}
+document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>{tab=b.dataset.t;edit=null;go()});
+$('#lgo').onclick=login;$('#lp').onkeydown=e=>{if(e.key==='Enter')login()};
+$('#fq1').onclick=()=>{$('#le').value='lizeth@qatcmm.co';$('#lp').value='qa2026'};$('#fq2').onclick=()=>{$('#le').value='juan@qatcmm.co';$('#lp').value='dev2026'};
+boot();
+</script>
+</body>
+</html>
