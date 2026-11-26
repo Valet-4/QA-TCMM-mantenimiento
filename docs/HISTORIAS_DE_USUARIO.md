@@ -5,7 +5,7 @@ Cada historia se implementa en su propia rama y se integra a `main` mediante un 
 
 | ID | Historia | Prioridad | Puntos | Rama | Estado |
 |---|---|---|---|---|---|
-| HU-01 | Cambiar entre tema claro y oscuro | Media | 2 | `feature/HU-01-tema-oscuro` | ⏳ Pendiente |
+| HU-01 | Cambiar entre tema claro y oscuro | Media | 2 | `feature/HU-01-tema-oscuro` | ✅ Implementada |
 | HU-02 | Filtrar defectos por estado y severidad | Alta | 3 | `feature/HU-02-filtro-defectos` | ⏳ Pendiente |
 | HU-03 | Comentar los defectos | Alta | 5 | `feature/HU-03-comentarios-defectos` | ⏳ Pendiente |
 | HU-04 | Eliminar casos de prueba sin ejecuciones | Media | 3 | `feature/HU-04-eliminar-caso` | ⏳ Pendiente |
@@ -17,14 +17,14 @@ Cada historia se implementa en su propia rama y se integra a `main` mediante un 
 
 **Criterios de aceptación**
 
-- [ ] En la barra lateral aparece el botón «Cambiar a modo oscuro» o «Cambiar a modo claro», según el tema activo.
-- [ ] Al pulsarlo, toda la interfaz cambia de tema de inmediato y se muestra un aviso de confirmación.
-- [ ] La preferencia se conserva al recargar la página o al volver a iniciar sesión.
-- [ ] Si el usuario nunca ha elegido un tema, se usa el del sistema operativo.
+- [x] En la barra lateral aparece el botón «Cambiar a modo oscuro» o «Cambiar a modo claro», según el tema activo.
+- [x] Al pulsarlo, toda la interfaz cambia de tema de inmediato y se muestra un aviso de confirmación.
+- [x] La preferencia se conserva al recargar la página o al volver a iniciar sesión.
+- [x] Si el usuario nunca ha elegido un tema, se usa el del sistema operativo.
 
 - Prioridad: Media · Estimación: 2 puntos
 - Rama: `feature/HU-01-tema-oscuro` · Issue: #1
-- Estado: Pendiente
+- Estado: Implementada
 
 ## HU-02 · Filtrar defectos por estado y severidad
 
