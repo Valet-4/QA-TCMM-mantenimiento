@@ -17,6 +17,24 @@ Autora: Lizeth Valentina Cuta Hernández (código 100225551).
 - Reportes: descarga de CSV e impresión a PDF.
 - Modo oscuro automático según el sistema.
 
+## Mantenimiento: historias de usuario implementadas
+
+El detalle y los criterios de aceptación están en [`docs/HISTORIAS_DE_USUARIO.md`](docs/HISTORIAS_DE_USUARIO.md).
+
+- **HU-01** · Cambiar entre tema claro y oscuro (rama `feature/HU-01-tema-oscuro`)
+- **HU-02** · Filtrar defectos por estado y severidad (rama `feature/HU-02-filtro-defectos`)
+- **HU-03** · Comentar los defectos (rama `feature/HU-03-comentarios-defectos`)
+- **HU-04** · Eliminar casos de prueba sin ejecuciones (rama `feature/HU-04-eliminar-caso`)
+- **HU-05** · Exportar los casos de prueba a CSV (rama `feature/HU-05-exportar-casos`)
+
+## Flujo de control de versiones
+
+- `main` contiene siempre una versión funcional.
+- Cada historia se desarrolla en una rama `feature/HU-xx-...`.
+- Los commits siguen el formato `tipo(HU-xx): descripción` (feat, docs, chore).
+- Cada rama se integra a `main` con un pull request que cierra su issue.
+- `.gitignore` excluye archivos locales, del sistema y del editor.
+
 ## Cuentas de ejemplo
 
 | Rol | Correo | Clave |
