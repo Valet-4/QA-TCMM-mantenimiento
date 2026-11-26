@@ -89,7 +89,8 @@ dialog::backdrop{background:rgba(15,23,42,.55)}
  <button class="nav" data-t="repo">Reportes</button>
  <button class="nav" data-t="notif">Notificaciones <span class="bdg" id="nb"></span></button>
  <div class="who"><span id="wn"></span><button class="b" style="margin-top:10px;width:100%" onclick="logout()">Cerrar sesión</button>
-  <button class="b" style="margin-top:6px;width:100%" onclick="reset()">Restablecer datos</button></div>
+  <button class="b" style="margin-top:6px;width:100%" onclick="reset()">Restablecer datos</button>
+  <button class="b" id="thm" style="margin-top:6px;width:100%" onclick="toggleTheme()">Cambiar a modo oscuro</button></div>
 </aside>
 <main><div id="kpis" class="kpis"></div><div id="view"></div></main>
 </div>
@@ -243,11 +244,18 @@ function setDef(id,v){const d=S.defects.find(x=>x.id===id),e=S.execs.find(x=>x.i
 function closeDef(id){const d=S.defects.find(x=>x.id===id);d.est='Cerrado';S.cases.find(c=>c.id===d.cid).est='Diseñado';notify(d.dev,d.id+' fue cerrado por QA.');save();toast('Defecto cerrado. El caso quedó listo para una nueva ejecución.');go()}
 function readAll(){S.notifs.forEach(n=>{if(n.to===S.me)n.l=true});save();go()}
 function dl(){const b=new Blob(['\ufeff'+window.CSV],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='reporte-ejecuciones-'+pid+'.csv';document.body.appendChild(a);a.click();a.remove();toast('Reporte CSV descargado.')}
+// HU-01: el usuario elige el tema y la preferencia se recuerda entre sesiones
+const sysDark=()=>matchMedia('(prefers-color-scheme: dark)').matches;
+function applyTheme(){let t=null;try{t=localStorage.getItem('qatcmm-tema')}catch(e){}
+ if(t)document.documentElement.dataset.theme=t;else delete document.documentElement.dataset.theme;
+ const dark=t?t==='dark':sysDark();$('#thm').textContent=dark?'Cambiar a modo claro':'Cambiar a modo oscuro'}
+function toggleTheme(){const t=document.documentElement.dataset.theme||(sysDark()?'dark':'light'),n=t==='dark'?'light':'dark';
+ try{localStorage.setItem('qatcmm-tema',n)}catch(e){}applyTheme();toast('Tema '+(n==='dark'?'oscuro':'claro')+' aplicado.')}
 function reset(){S=seed();pid=S.projects[0].id;edit=null;runCid=null;save();toast('Datos de ejemplo restablecidos. Inicia sesión de nuevo.');boot()}
 document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>{tab=b.dataset.t;edit=null;go()});
 $('#lgo').onclick=login;$('#lp').onkeydown=e=>{if(e.key==='Enter')login()};
 $('#fq1').onclick=()=>{$('#le').value='lizeth@qatcmm.co';$('#lp').value='qa2026'};$('#fq2').onclick=()=>{$('#le').value='juan@qatcmm.co';$('#lp').value='dev2026'};
-boot();
+applyTheme();boot();
 </script>
 </body>
 </html>
