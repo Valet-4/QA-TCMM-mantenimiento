@@ -7,7 +7,7 @@ Cada historia se implementa en su propia rama y se integra a `main` mediante un 
 |---|---|---|---|---|---|
 | HU-01 | Cambiar entre tema claro y oscuro | Media | 2 | `feature/HU-01-tema-oscuro` | ✅ Implementada |
 | HU-02 | Filtrar defectos por estado y severidad | Alta | 3 | `feature/HU-02-filtro-defectos` | ✅ Implementada |
-| HU-03 | Comentar los defectos | Alta | 5 | `feature/HU-03-comentarios-defectos` | ⏳ Pendiente |
+| HU-03 | Comentar los defectos | Alta | 5 | `feature/HU-03-comentarios-defectos` | ✅ Implementada |
 | HU-04 | Eliminar casos de prueba sin ejecuciones | Media | 3 | `feature/HU-04-eliminar-caso` | ⏳ Pendiente |
 | HU-05 | Exportar los casos de prueba a CSV | Media | 2 | `feature/HU-05-exportar-casos` | ⏳ Pendiente |
 
@@ -47,14 +47,14 @@ Cada historia se implementa en su propia rama y se integra a `main` mediante un 
 
 **Criterios de aceptación**
 
-- [ ] Cada defecto tiene el botón «Comentarios (n)», donde n es la cantidad de comentarios.
-- [ ] La ventana de comentarios muestra autor, fecha y texto de cada comentario.
-- [ ] No se permite agregar un comentario vacío.
-- [ ] Al comentar, la otra parte (analista QA o desarrollador) recibe una notificación.
+- [x] Cada defecto tiene el botón «Comentarios (n)», donde n es la cantidad de comentarios.
+- [x] La ventana de comentarios muestra autor, fecha y texto de cada comentario.
+- [x] No se permite agregar un comentario vacío.
+- [x] Al comentar, la otra parte (analista QA o desarrollador) recibe una notificación.
 
 - Prioridad: Alta · Estimación: 5 puntos
 - Rama: `feature/HU-03-comentarios-defectos` · Issue: #3
-- Estado: Pendiente
+- Estado: Implementada
 
 ## HU-04 · Eliminar casos de prueba sin ejecuciones
 
