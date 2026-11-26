@@ -130,7 +130,7 @@ const openDef=()=>S.defects.filter(d=>d.est!=='Cerrado'&&pcases().some(c=>c.id==
 const notify=(to,txt)=>{if(to)S.notifs.push({id:++S.seq.nt,to,txt,f:now(),l:false})};
 const ro=()=>role()==='dev'?'<div class="ro">Tu perfil de Desarrollador permite consultar los casos y actualizar el estado de los defectos que te asignan.</div>':'';
 const projSel=()=>`<label>Proyecto<select onchange="pid=this.value;edit=null;runCid=null;go()">${S.projects.map(p=>`<option value="${p.id}" ${p.id===pid?'selected':''}>${esc(p.nombre)}</option>`).join('')}</select></label>`;
-const modal=h=>{const d=$('#dlg');d.innerHTML=h+'<div class="row"><button class="b" onclick="dlg.close()">Cerrar</button></div>';d.showModal()};
+const modal=h=>{const d=$('#dlg');d.innerHTML=h+'<div class="row"><button class="b" onclick="dlg.close()">Cerrar</button></div>';if(!d.open)d.showModal()};
 
 function kpis(){const cs=pcases(),ap=cs.filter(c=>c.est==='Aprobado').length,fa=cs.filter(c=>c.est==='Fallido').length;
  $('#kpis').innerHTML=[[cs.length,'Casos de prueba',''],[ap,'Aprobados','k-ok'],[fa,'Fallidos','k-bad'],[openDef().length,'Defectos abiertos',''],[(cs.length?Math.round(ap/cs.length*100):0)+'%','Cobertura aprobada','']].map(k=>`<div class="kpi ${k[2]}"><b>${k[0]}</b><span>${k[1]}</span></div>`).join('')}
@@ -182,7 +182,7 @@ defe(){
  const ds=S.defects.filter(d=>(!fds||d.est===fds)&&(!fdv||d.sev===fdv));
  const opt=(arr,v,all)=>['',...arr].map(x=>`<option value="${x}" ${x===v?'selected':''}>${x||all}</option>`).join('');
  const rows=ds.map(d=>`<tr class="${d.est!=='Cerrado'&&d.sev==='Crítica'?'fail':''}"><td>${d.id}</td><td><b>${esc(d.resumen)}</b> ${d.rec?tag('Reincidente'):''}<br><small>${d.cid} · ${esc(cname(d.cid))} · origen ${d.eid}</small></td><td>${tag(d.sev)}</td><td>${tag(d.est)}</td><td>${esc(uname(d.dev))}</td>
- <td><button class="b" onclick="viewExec('${d.eid}')">Ver detalle</button> ${role()==='dev'&&d.est!=='Cerrado'?`<select aria-label="Cambiar estado de ${d.id}" onchange="setDef('${d.id}',this.value)">${['Asignado','En corrección','Resuelto'].map(x=>`<option ${x===d.est?'selected':''}>${x}</option>`).join('')}</select>`:''}${role()==='qa'&&d.est==='Resuelto'?`<button class="b p" onclick="closeDef('${d.id}')">Cerrar y reprobar</button>`:''}</td></tr>`).join('')||(S.defects.length?'<tr><td colspan="6">Ningún defecto coincide con los filtros.</td></tr>':'<tr><td colspan="6">No hay defectos. Se crean automáticamente cuando una ejecución falla.</td></tr>');
+ <td><button class="b" onclick="viewExec('${d.eid}')">Ver detalle</button> <button class="b" onclick="viewCom('${d.id}')">Comentarios (${(d.com||[]).length})</button> ${role()==='dev'&&d.est!=='Cerrado'?`<select aria-label="Cambiar estado de ${d.id}" onchange="setDef('${d.id}',this.value)">${['Asignado','En corrección','Resuelto'].map(x=>`<option ${x===d.est?'selected':''}>${x}</option>`).join('')}</select>`:''}${role()==='qa'&&d.est==='Resuelto'?`<button class="b p" onclick="closeDef('${d.id}')">Cerrar y reprobar</button>`:''}</td></tr>`).join('')||(S.defects.length?'<tr><td colspan="6">Ningún defecto coincide con los filtros.</td></tr>':'<tr><td colspan="6">No hay defectos. Se crean automáticamente cuando una ejecución falla.</td></tr>');
  return `<h1>Gestión de defectos</h1><p class="sub">Cada defecto queda amarrado a la ejecución y al caso que lo originó.</p>
  <div class="card"><div class="f"><label>Estado<select id="fds" onchange="fds=this.value;go()">${opt(['Asignado','En corrección','Resuelto','Cerrado'],fds,'Todos')}</select></label><label>Severidad<select id="fdv" onchange="fdv=this.value;go()">${opt(['Crítica','Alta','Media','Baja'],fdv,'Todas')}</select></label></div>
   <p class="sub" id="fdc" style="margin:10px 0 6px">Mostrando ${ds.length} de ${S.defects.length} defecto(s).</p><div class="tw"><table><tr><th>Código</th><th>Hallazgo</th><th>Severidad</th><th>Estado</th><th>Asignado a</th><th>Acción</th></tr>${rows}</table></div></div>`},
@@ -246,6 +246,14 @@ function viewExec(id){const e=S.execs.find(x=>x.id===id),c=S.cases.find(x=>x.id=
  <p><b>Observaciones:</b> ${esc(e.obs||'—')}</p>${e.img?`<img class="ev" alt="Evidencia de la ejecución ${e.id}" src="${e.img}">`:`<p><small>Evidencia: ${esc(e.ev||'sin archivo adjunto')}</small></p>`}`)}
 function setDef(id,v){const d=S.defects.find(x=>x.id===id),e=S.execs.find(x=>x.id===d.eid);d.est=v;if(v==='Resuelto')notify(e.by,d.id+' fue resuelto por '+uname(S.me)+'. Ya puedes volver a probar '+d.cid+'.');save();toast('Estado actualizado a '+v+'.');go()}
 function closeDef(id){const d=S.defects.find(x=>x.id===id);d.est='Cerrado';S.cases.find(c=>c.id===d.cid).est='Diseñado';notify(d.dev,d.id+' fue cerrado por QA.');save();toast('Defecto cerrado. El caso quedó listo para una nueva ejecución.');go()}
+// HU-03: comentarios entre el analista QA y el desarrollador en cada defecto
+function viewCom(id){const d=S.defects.find(x=>x.id===id),cs=d.com||[];
+ modal(`<h2>Comentarios de ${d.id}</h2><p><small>${esc(d.resumen)}</small></p>${cs.map(c=>`<div class="nt"><b>${esc(uname(c.by))}</b> <small>${c.f}</small><br>${esc(c.t)}</div>`).join('')||'<p>Aún no hay comentarios en este defecto.</p>'}
+ <label class="f" style="margin-top:12px"><span class="w"><small>Nuevo comentario</small><textarea id="ctx" placeholder="Escribe un avance, una duda o la causa encontrada"></textarea></span></label>
+ <div class="row"><button class="b p" onclick="addCom('${d.id}')">Agregar comentario</button></div>`)}
+function addCom(id){const t=$('#ctx').value.trim();if(!t)return toast('Escribe el comentario antes de agregarlo.');
+ const d=S.defects.find(x=>x.id===id),e=S.execs.find(x=>x.id===d.eid);(d.com=d.com||[]).push({by:S.me,f:now(),t});
+ notify(role()==='dev'?e.by:d.dev,uname(S.me)+' comentó en '+d.id+': '+t.slice(0,60));save();toast('Comentario agregado.');go();viewCom(id)}
 function readAll(){S.notifs.forEach(n=>{if(n.to===S.me)n.l=true});save();go()}
 function dl(){const b=new Blob(['\ufeff'+window.CSV],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='reporte-ejecuciones-'+pid+'.csv';document.body.appendChild(a);a.click();a.remove();toast('Reporte CSV descargado.')}
 // HU-01: el usuario elige el tema y la preferencia se recuerda entre sesiones
