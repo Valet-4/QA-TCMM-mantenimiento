@@ -6,7 +6,7 @@ Cada historia se implementa en su propia rama y se integra a `main` mediante un 
 | ID | Historia | Prioridad | Puntos | Rama | Estado |
 |---|---|---|---|---|---|
 | HU-01 | Cambiar entre tema claro y oscuro | Media | 2 | `feature/HU-01-tema-oscuro` | ✅ Implementada |
-| HU-02 | Filtrar defectos por estado y severidad | Alta | 3 | `feature/HU-02-filtro-defectos` | ⏳ Pendiente |
+| HU-02 | Filtrar defectos por estado y severidad | Alta | 3 | `feature/HU-02-filtro-defectos` | ✅ Implementada |
 | HU-03 | Comentar los defectos | Alta | 5 | `feature/HU-03-comentarios-defectos` | ⏳ Pendiente |
 | HU-04 | Eliminar casos de prueba sin ejecuciones | Media | 3 | `feature/HU-04-eliminar-caso` | ⏳ Pendiente |
 | HU-05 | Exportar los casos de prueba a CSV | Media | 2 | `feature/HU-05-exportar-casos` | ⏳ Pendiente |
@@ -32,14 +32,14 @@ Cada historia se implementa en su propia rama y se integra a `main` mediante un 
 
 **Criterios de aceptación**
 
-- [ ] El módulo Defectos tiene dos listas: Estado (Asignado, En corrección, Resuelto, Cerrado) y Severidad (Crítica, Alta, Media, Baja).
-- [ ] La tabla muestra solo los defectos que cumplen ambos filtros.
-- [ ] Se indica cuántos defectos se están mostrando del total («Mostrando X de Y»).
-- [ ] Si ningún defecto coincide, aparece un mensaje que lo explica.
+- [x] El módulo Defectos tiene dos listas: Estado (Asignado, En corrección, Resuelto, Cerrado) y Severidad (Crítica, Alta, Media, Baja).
+- [x] La tabla muestra solo los defectos que cumplen ambos filtros.
+- [x] Se indica cuántos defectos se están mostrando del total («Mostrando X de Y»).
+- [x] Si ningún defecto coincide, aparece un mensaje que lo explica.
 
 - Prioridad: Alta · Estimación: 3 puntos
 - Rama: `feature/HU-02-filtro-defectos` · Issue: #2
-- Estado: Pendiente
+- Estado: Implementada
 
 ## HU-03 · Comentar los defectos
 

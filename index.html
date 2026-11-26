@@ -117,7 +117,7 @@ const seed=()=>({me:null,
  notifs:[{id:1,to:'USR-002',txt:'Se te asignó DEF-501: Excepción NullPointer en cálculo de cuota',f:'2026-09-05 16:31',l:false}],
  seq:{tc:103,ex:889,df:501,nt:1}});
 const load=()=>{try{return JSON.parse(localStorage.getItem('qatcmm2'))||seed()}catch(e){return seed()}};
-let S=load(),tab='panel',pid=S.projects[0].id,edit=null,runCid=null,fq='',fe='';
+let S=load(),tab='panel',pid=S.projects[0].id,edit=null,runCid=null,fq='',fe='',fds='',fdv='';
 const save=()=>{try{localStorage.setItem('qatcmm2',JSON.stringify(S))}catch(e){toast('No hay espacio de almacenamiento; la evidencia pesada no se guardó.')}};
 const toast=m=>{const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.display='none',3800)};
 const me=()=>S.users.find(u=>u.id===S.me),role=()=>me()?me().rol:'';
@@ -178,10 +178,14 @@ ejec(){
  <div class="row"><button class="b p" onclick="finish()">Finalizar ejecución</button></div></div>`:''}
  <div class="card"><h2>Ejecuciones registradas</h2><div class="tw"><table><tr><th>Código</th><th>Caso</th><th>Fecha</th><th>Resultado</th><th>Evidencia</th><th></th></tr>${S.execs.filter(e=>list.some(x=>x.id===e.cid)).slice().reverse().map(e=>`<tr class="${e.res==='FALLIDA'?'fail':''}"><td>${e.id}</td><td>${esc(cname(e.cid))}</td><td>${e.fecha}</td><td>${tag(e.res)}</td><td>${e.img?'Imagen adjunta':esc(e.ev||'—')}</td><td><button class="b" onclick="viewExec('${e.id}')">Ver detalle</button></td></tr>`).join('')}</table></div></div>`},
 defe(){
- const rows=S.defects.map(d=>`<tr class="${d.est!=='Cerrado'&&d.sev==='Crítica'?'fail':''}"><td>${d.id}</td><td><b>${esc(d.resumen)}</b> ${d.rec?tag('Reincidente'):''}<br><small>${d.cid} · ${esc(cname(d.cid))} · origen ${d.eid}</small></td><td>${tag(d.sev)}</td><td>${tag(d.est)}</td><td>${esc(uname(d.dev))}</td>
- <td><button class="b" onclick="viewExec('${d.eid}')">Ver detalle</button> ${role()==='dev'&&d.est!=='Cerrado'?`<select aria-label="Cambiar estado de ${d.id}" onchange="setDef('${d.id}',this.value)">${['Asignado','En corrección','Resuelto'].map(x=>`<option ${x===d.est?'selected':''}>${x}</option>`).join('')}</select>`:''}${role()==='qa'&&d.est==='Resuelto'?`<button class="b p" onclick="closeDef('${d.id}')">Cerrar y reprobar</button>`:''}</td></tr>`).join('')||'<tr><td colspan="6">No hay defectos. Se crean automáticamente cuando una ejecución falla.</td></tr>';
+ // HU-02: filtro por estado y severidad
+ const ds=S.defects.filter(d=>(!fds||d.est===fds)&&(!fdv||d.sev===fdv));
+ const opt=(arr,v,all)=>['',...arr].map(x=>`<option value="${x}" ${x===v?'selected':''}>${x||all}</option>`).join('');
+ const rows=ds.map(d=>`<tr class="${d.est!=='Cerrado'&&d.sev==='Crítica'?'fail':''}"><td>${d.id}</td><td><b>${esc(d.resumen)}</b> ${d.rec?tag('Reincidente'):''}<br><small>${d.cid} · ${esc(cname(d.cid))} · origen ${d.eid}</small></td><td>${tag(d.sev)}</td><td>${tag(d.est)}</td><td>${esc(uname(d.dev))}</td>
+ <td><button class="b" onclick="viewExec('${d.eid}')">Ver detalle</button> ${role()==='dev'&&d.est!=='Cerrado'?`<select aria-label="Cambiar estado de ${d.id}" onchange="setDef('${d.id}',this.value)">${['Asignado','En corrección','Resuelto'].map(x=>`<option ${x===d.est?'selected':''}>${x}</option>`).join('')}</select>`:''}${role()==='qa'&&d.est==='Resuelto'?`<button class="b p" onclick="closeDef('${d.id}')">Cerrar y reprobar</button>`:''}</td></tr>`).join('')||(S.defects.length?'<tr><td colspan="6">Ningún defecto coincide con los filtros.</td></tr>':'<tr><td colspan="6">No hay defectos. Se crean automáticamente cuando una ejecución falla.</td></tr>');
  return `<h1>Gestión de defectos</h1><p class="sub">Cada defecto queda amarrado a la ejecución y al caso que lo originó.</p>
- <div class="card"><div class="tw"><table><tr><th>Código</th><th>Hallazgo</th><th>Severidad</th><th>Estado</th><th>Asignado a</th><th>Acción</th></tr>${rows}</table></div></div>`},
+ <div class="card"><div class="f"><label>Estado<select id="fds" onchange="fds=this.value;go()">${opt(['Asignado','En corrección','Resuelto','Cerrado'],fds,'Todos')}</select></label><label>Severidad<select id="fdv" onchange="fdv=this.value;go()">${opt(['Crítica','Alta','Media','Baja'],fdv,'Todas')}</select></label></div>
+  <p class="sub" id="fdc" style="margin:10px 0 6px">Mostrando ${ds.length} de ${S.defects.length} defecto(s).</p><div class="tw"><table><tr><th>Código</th><th>Hallazgo</th><th>Severidad</th><th>Estado</th><th>Asignado a</th><th>Acción</th></tr>${rows}</table></div></div>`},
 repo(){
  const cs=pcases(),ex=S.execs.filter(e=>cs.some(c=>c.id===e.cid));
  const csv=['Ejecucion,Caso,Titulo,Fecha,Resultado,Analista,Defecto'].concat(ex.map(e=>{const d=S.defects.find(x=>x.eid===e.id);return [e.id,e.cid,'"'+cname(e.cid).replace(/"/g,'""')+'"',e.fecha,e.res,uname(e.by),d?d.id:''].join(',')})).join('\n');
