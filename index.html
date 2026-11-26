@@ -160,7 +160,7 @@ casos(){
  const c=edit?S.cases.find(x=>x.id===edit):null;
  return `<h1>Casos de prueba</h1><p class="sub">Cada caso se vincula a un requisito y conserva su historial de versiones.</p>${ro()}
  <div class="card"><div class="f">${projSel()}<label>Buscar por código, título o requisito<input id="fq" value="${esc(fq)}" oninput="fq=this.value;drawCases()"></label>
- <label>Estado<select onchange="fe=this.value;drawCases()">${['','Diseñado','Aprobado','Fallido'].map(x=>`<option value="${x}" ${x===fe?'selected':''}>${x||'Todos'}</option>`).join('')}</select></label></div><div class="tw" id="tbl" style="margin-top:10px"></div></div>
+ <label>Estado<select onchange="fe=this.value;drawCases()">${['','Diseñado','Aprobado','Fallido'].map(x=>`<option value="${x}" ${x===fe?'selected':''}>${x||'Todos'}</option>`).join('')}</select></label></div><div class="tw" id="tbl" style="margin-top:10px"></div><div class="row"><button class="b" onclick="dlCases()">Exportar casos a CSV</button></div></div>
  ${role()==='qa'?`<div class="card"><h2>${c?'Editar '+c.id+' (se guardará como v'+(c.ver+1)+')':'Nuevo caso de prueba'}</h2>
  <div class="f"><label class="w">Título<input id="ct" value="${c?esc(c.titulo):''}"></label><label>Requisito asociado<input id="cr" placeholder="RF-01" value="${c?esc(c.req):''}"></label>
  <label>Prioridad<select id="cp">${['Alta','Media','Baja'].map(x=>`<option ${c&&c.pri===x?'selected':''}>${x}</option>`).join('')}</select></label>
@@ -259,7 +259,13 @@ function addCom(id){const t=$('#ctx').value.trim();if(!t)return toast('Escribe e
  const d=S.defects.find(x=>x.id===id),e=S.execs.find(x=>x.id===d.eid);(d.com=d.com||[]).push({by:S.me,f:now(),t});
  notify(role()==='dev'?e.by:d.dev,uname(S.me)+' comentó en '+d.id+': '+t.slice(0,60));save();toast('Comentario agregado.');go();viewCom(id)}
 function readAll(){S.notifs.forEach(n=>{if(n.to===S.me)n.l=true});save();go()}
-function dl(){const b=new Blob(['\ufeff'+window.CSV],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='reporte-ejecuciones-'+pid+'.csv';document.body.appendChild(a);a.click();a.remove();toast('Reporte CSV descargado.')}
+function dlFile(name,txt){const b=new Blob(['\ufeff'+txt],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();a.remove()}
+function dl(){dlFile('reporte-ejecuciones-'+pid+'.csv',window.CSV);toast('Reporte CSV descargado.')}
+// HU-05: exporta los casos visibles (respeta la búsqueda y el filtro de estado)
+function dlCases(){const q=fq.toLowerCase(),cs=pcases().filter(c=>(!fe||c.est===fe)&&(c.id+' '+c.titulo+' '+c.req).toLowerCase().includes(q));
+ if(!cs.length)return toast('No hay casos para exportar con los filtros actuales.');const qt=v=>'"'+String(v).replace(/"/g,'""')+'"';
+ dlFile('casos-de-prueba-'+pid+'.csv',['Codigo,Titulo,Requisito,Prioridad,Estado,Version,Pasos'].concat(cs.map(c=>[c.id,qt(c.titulo),c.req,c.pri,c.est,c.ver,qt(c.steps.map((s,i)=>(i+1)+'. '+s.a+' -> '+s.r).join(' / '))].join(','))).join('\n'));
+ toast(cs.length+' caso(s) exportado(s) a CSV.')}
 // HU-01: el usuario elige el tema y la preferencia se recuerda entre sesiones
 const sysDark=()=>matchMedia('(prefers-color-scheme: dark)').matches;
 function applyTheme(){let t=null;try{t=localStorage.getItem('qatcmm-tema')}catch(e){}

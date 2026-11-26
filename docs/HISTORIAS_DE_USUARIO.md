@@ -9,7 +9,7 @@ Cada historia se implementa en su propia rama y se integra a `main` mediante un 
 | HU-02 | Filtrar defectos por estado y severidad | Alta | 3 | `feature/HU-02-filtro-defectos` | ✅ Implementada |
 | HU-03 | Comentar los defectos | Alta | 5 | `feature/HU-03-comentarios-defectos` | ✅ Implementada |
 | HU-04 | Eliminar casos de prueba sin ejecuciones | Media | 3 | `feature/HU-04-eliminar-caso` | ✅ Implementada |
-| HU-05 | Exportar los casos de prueba a CSV | Media | 2 | `feature/HU-05-exportar-casos` | ⏳ Pendiente |
+| HU-05 | Exportar los casos de prueba a CSV | Media | 2 | `feature/HU-05-exportar-casos` | ✅ Implementada |
 
 ## HU-01 · Cambiar entre tema claro y oscuro
 
@@ -77,11 +77,11 @@ Cada historia se implementa en su propia rama y se integra a `main` mediante un 
 
 **Criterios de aceptación**
 
-- [ ] En el módulo Casos de prueba existe el botón «Exportar casos a CSV».
-- [ ] El archivo incluye código, título, requisito, prioridad, estado, versión y pasos.
-- [ ] Se exportan solo los casos visibles según la búsqueda y el filtro de estado.
-- [ ] Las tildes se ven bien al abrir el archivo en Excel.
+- [x] En el módulo Casos de prueba existe el botón «Exportar casos a CSV».
+- [x] El archivo incluye código, título, requisito, prioridad, estado, versión y pasos.
+- [x] Se exportan solo los casos visibles según la búsqueda y el filtro de estado.
+- [x] Las tildes se ven bien al abrir el archivo en Excel.
 
 - Prioridad: Media · Estimación: 2 puntos
 - Rama: `feature/HU-05-exportar-casos` · Issue: #5
-- Estado: Pendiente
+- Estado: Implementada
