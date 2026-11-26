@@ -58,3 +58,5 @@ Es un prototipo evolutivo: la interfaz y la lógica de estados se reutilizarán 
 ## Capturas
 
 Están en la carpeta `docs/capturas/`.
+
+Video explicativo de la actividad 4 incluido en el informe de entrega 
