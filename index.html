@@ -205,7 +205,7 @@ notif(){
 
 function drawCases(){const q=fq.toLowerCase(),r=pcases().filter(c=>(!fe||c.est===fe)&&(c.id+' '+c.titulo+' '+c.req).toLowerCase().includes(q)).map(c=>`<tr class="${c.est==='Fallido'?'fail':''}"><td>${c.id}</td><td><b>${esc(c.titulo)}</b><br><small>Requisito ${esc(c.req)} · ${c.steps.length} paso(s)</small></td><td>${tag(c.pri)}</td><td>${tag(c.est)}</td>
  <td><details><summary>v${c.ver}</summary><small>${c.hist.map(h=>`v${h.v} · ${h.f} · ${esc(h.n)}`).join('<br>')}</small></details></td>
- <td>${role()==='qa'?`<button class="b" onclick="edit='${c.id}';go()">Editar</button> <button class="b" onclick="dupCase('${c.id}')">Duplicar</button>`:''}</td></tr>`).join('');
+ <td>${role()==='qa'?`<button class="b" onclick="edit='${c.id}';go()">Editar</button> <button class="b" onclick="dupCase('${c.id}')">Duplicar</button>${S.execs.some(e=>e.cid===c.id)?'':` <button class="b" onclick="askDel('${c.id}')">Eliminar</button>`}`:''}</td></tr>`).join('');
  $('#tbl').innerHTML=`<table><tr><th>Código</th><th>Caso</th><th>Prioridad</th><th>Estado</th><th>Versión</th><th></th></tr>${r||'<tr><td colspan="6">Ningún caso coincide con la búsqueda. Cambia los filtros o crea uno nuevo.</td></tr>'}</table>`}
 const A={casos:drawCases};
 function go(){document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));kpis();
@@ -228,6 +228,10 @@ function saveCase(){
  else{S.cases.push({id:'TC-'+(++S.seq.tc),pid,titulo:t,req:r,pre:$('#cc').value,pri:$('#cp').value,est:'Diseñado',ver:1,steps:st,hist:[{v:1,f,n:'Creación del caso'}]});toast('Caso creado correctamente.')}
  save();go()}
 function dupCase(id){const c=JSON.parse(JSON.stringify(S.cases.find(x=>x.id===id))),f=now().slice(0,10);Object.assign(c,{id:'TC-'+(++S.seq.tc),titulo:c.titulo+' (copia)',est:'Diseñado',ver:1,hist:[{v:1,f,n:'Duplicado de '+id}]});S.cases.push(c);save();toast('Caso duplicado como '+c.id+'.');go()}
+// HU-04: solo se eliminan casos sin ejecuciones, para no perder trazabilidad
+function askDel(id){modal(`<h2>Eliminar ${id}</h2><p>¿Seguro que quieres eliminar <b>${esc(cname(id))}</b>? Esta acción no se puede deshacer.</p><div class="row"><button class="b p" onclick="delCase('${id}')">Sí, eliminar</button></div>`)}
+function delCase(id){if(S.execs.some(e=>e.cid===id)){dlg.close();return toast('No se puede eliminar: el caso tiene ejecuciones registradas.')}
+ S.cases=S.cases.filter(c=>c.id!==id);if(edit===id)edit=null;save();dlg.close();toast('Caso '+id+' eliminado.');go()}
 const readEv=f=>new Promise(r=>{if(!f||!/^image\//.test(f.type))return r('');const fr=new FileReader();fr.onerror=()=>r('');
  fr.onload=()=>{const im=new Image();im.onerror=()=>r('');im.onload=()=>{const k=Math.min(1,720/im.width),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);r(c.toDataURL('image/jpeg',.72))};im.src=fr.result};fr.readAsDataURL(f)});
 async function finish(){
