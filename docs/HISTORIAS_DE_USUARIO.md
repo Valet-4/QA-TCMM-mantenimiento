@@ -8,7 +8,7 @@ Cada historia se implementa en su propia rama y se integra a `main` mediante un 
 | HU-01 | Cambiar entre tema claro y oscuro | Media | 2 | `feature/HU-01-tema-oscuro` | ✅ Implementada |
 | HU-02 | Filtrar defectos por estado y severidad | Alta | 3 | `feature/HU-02-filtro-defectos` | ✅ Implementada |
 | HU-03 | Comentar los defectos | Alta | 5 | `feature/HU-03-comentarios-defectos` | ✅ Implementada |
-| HU-04 | Eliminar casos de prueba sin ejecuciones | Media | 3 | `feature/HU-04-eliminar-caso` | ⏳ Pendiente |
+| HU-04 | Eliminar casos de prueba sin ejecuciones | Media | 3 | `feature/HU-04-eliminar-caso` | ✅ Implementada |
 | HU-05 | Exportar los casos de prueba a CSV | Media | 2 | `feature/HU-05-exportar-casos` | ⏳ Pendiente |
 
 ## HU-01 · Cambiar entre tema claro y oscuro
@@ -62,14 +62,14 @@ Cada historia se implementa en su propia rama y se integra a `main` mediante un 
 
 **Criterios de aceptación**
 
-- [ ] El botón «Eliminar» solo aparece en los casos que no tienen ejecuciones registradas.
-- [ ] Antes de eliminar se pide confirmación en una ventana.
-- [ ] Al confirmar, el caso desaparece de la lista y de los indicadores, y se muestra un aviso.
-- [ ] El perfil Desarrollador no puede eliminar casos.
+- [x] El botón «Eliminar» solo aparece en los casos que no tienen ejecuciones registradas.
+- [x] Antes de eliminar se pide confirmación en una ventana.
+- [x] Al confirmar, el caso desaparece de la lista y de los indicadores, y se muestra un aviso.
+- [x] El perfil Desarrollador no puede eliminar casos.
 
 - Prioridad: Media · Estimación: 3 puntos
 - Rama: `feature/HU-04-eliminar-caso` · Issue: #4
-- Estado: Pendiente
+- Estado: Implementada
 
 ## HU-05 · Exportar los casos de prueba a CSV
 
